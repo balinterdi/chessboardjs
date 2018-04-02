@@ -1702,6 +1702,11 @@
       addGhost = toShow;
     };
 
+    // remove ghost elements
+    widget.removeGhosts = function() {
+      $board.find("." + CSS.ghost).remove();
+    };
+
     // -------------------------------------------------------------------------
     // Browser Events
     // -------------------------------------------------------------------------
