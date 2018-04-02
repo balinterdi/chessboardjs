@@ -45,6 +45,7 @@
   CSS["notation"] = "notation-322f9";
   CSS["numeric"] = "numeric-fc462";
   CSS["piece"] = "piece-417db";
+  CSS["ghost"] = "ghost-12abc";
   CSS["row"] = "row-5277c";
   CSS["sparePieces"] = "spare-pieces-7492f";
   CSS["sparePiecesBottom"] = "spare-pieces-bottom-ae20f";
@@ -938,6 +939,33 @@
       return interpolateTemplate(html, CSS);
     }
 
+    function buildGhostHTML(piece, hidden, id) {
+      var html = '<img src="' + buildPieceImgSrc(piece) + '" ';
+      if (isString(id) && id !== "") {
+        html += 'id="' + id + '" ';
+      }
+      html +=
+        'alt="" ' +
+        'class="{ghost}" ' +
+        'data-piece="' +
+        piece +
+        '" ' +
+        'style="width:' +
+        squareSize +
+        "px;" +
+        "height:" +
+        squareSize +
+        "px;";
+
+      if (hidden) {
+        html += "display:none;";
+      }
+
+      html += '" />';
+
+      return interpolateTemplate(html, CSS);
+    }
+
     function buildSparePiecesHTML(color) {
       var pieces = ["wK", "wQ", "wR", "wB", "wN", "wP"];
       if (color === "black") {
@@ -1326,6 +1354,11 @@
       function onAnimationComplete() {
         drawPositionInstant();
         $draggedPiece.css("display", "none");
+
+        // add ghost element
+        console.log("added ghost");
+        var $destSquare = $("#" + squareElsIds[square]);
+        $destSquare.append(buildGhostHTML(draggedPiece, false, "ghost"));
 
         // execute their onSnapEnd function
         if (isFunction(config.onSnapEnd)) {
