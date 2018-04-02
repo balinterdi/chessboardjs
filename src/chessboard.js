@@ -1343,6 +1343,48 @@
       isDragging = false;
     }
 
+    function isKnight(code) {
+      return isString(code) && code.search(/^[bw]N$/) !== -1;
+    }
+
+    function getSquaresFromSourceToDestination(piece, src, dest) {
+      var squares = [];
+      if (isKnight(piece)) {
+        console.log("Is knight");
+        var dx = Math.abs(dest.charCodeAt(0) - src.charCodeAt(0));
+        var dy = Math.abs(dest[1] - src[1]);
+        console.log(dx, dy);
+        var isMoveMoreVertical = dy > dx;
+        if (isMoveMoreVertical) {
+          for (
+            var rank = Math.min(src[1], dest[1]);
+            rank <= Math.max(src[1], dest[1]);
+            rank++
+          ) {
+            squares.push(src[0] + rank);
+          }
+        } else {
+          for (
+            var file = Math.min(src.charCodeAt(0), dest.charCodeAt(0));
+            file <= Math.max(src.charCodeAt(0), dest.charCodeAt(0));
+            file++
+          ) {
+            squares.push(String.fromCharCode(file) + src[1]);
+          }
+        }
+        squares.push(dest);
+        console.log(squares);
+      } else {
+      }
+      return squares;
+    }
+
+    function addHighlightsToSquares(squares) {
+      squares.forEach(function(square) {
+        $("#" + squareElsIds[square]).addClass("shade1");
+      });
+    }
+
     function dropDraggedPieceOnSquare(square) {
       removeSquareHighlights();
 
@@ -1364,6 +1406,14 @@
         if (addGhost) {
           var $destSquare = $("#" + squareElsIds[square]);
           $destSquare.append(buildGhostHTML(draggedPiece, false));
+          // add highlights from src to ghost
+          // calculate highlights
+          var squares = getSquaresFromSourceToDestination(
+            draggedPiece,
+            draggedPieceSource,
+            square
+          );
+          addHighlightsToSquares(squares);
         }
 
         // execute their onSnapEnd function
