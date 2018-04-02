@@ -168,6 +168,10 @@
     return typeof n === "number" && isFinite(n) && Math.floor(n) === n;
   }
 
+  function isBoolean(b) {
+    return typeof b === "boolean";
+  }
+
   function validAnimationSpeed(speed) {
     if (speed === "fast" || speed === "slow") return true;
     if (!isInteger(speed)) return false;
@@ -709,6 +713,7 @@
     var squareElsIds = {};
     var squareElsOffsets = {};
     var squareSize = 16;
+    var addGhost = false;
 
     // -------------------------------------------------------------------------
     // Validation / Errors
@@ -1356,9 +1361,10 @@
         $draggedPiece.css("display", "none");
 
         // add ghost element
-        console.log("added ghost");
-        var $destSquare = $("#" + squareElsIds[square]);
-        $destSquare.append(buildGhostHTML(draggedPiece, false, "ghost"));
+        if (addGhost) {
+          var $destSquare = $("#" + squareElsIds[square]);
+          $destSquare.append(buildGhostHTML(draggedPiece, false));
+        }
 
         // execute their onSnapEnd function
         if (isFunction(config.onSnapEnd)) {
@@ -1686,6 +1692,14 @@
     // set the starting position
     widget.start = function(useAnimation) {
       widget.position("start", useAnimation);
+    };
+
+    // show ghost of piece after dropping piece
+    widget.setAddGhost = function(toShow) {
+      if (!isBoolean(toShow)) {
+        return;
+      }
+      addGhost = toShow;
     };
 
     // -------------------------------------------------------------------------
