@@ -69,4 +69,6 @@
 .ghost-12abc {
   opacity: 0.3;
   position: absolute;
+
+  pointer-events: none;
 }
