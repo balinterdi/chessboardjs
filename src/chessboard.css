@@ -65,3 +65,8 @@
   top: 2px;
   left: 2px;
 }
+
+.ghost-12abc {
+  opacity: 0.3;
+  position: absolute;
+}
