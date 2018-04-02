@@ -14,10 +14,18 @@
   <script src="../node_modules/jquery/dist/jquery.min.js"></script>
   <script src="chessboard.js"></script>
   <script>
+
+    var onDropHandler = function (source, target, piece, newPos, oldPos, orientation) {
+      setTimeout(board.position, 250, oldPos)
+    }
+
     var board = Chessboard('#myBoard', {
       draggable: true,
-      position: 'start'
+      position: 'start',
+      onDrop: onDropHandler
     })
+
+    board.setAddGhost(true);
   // var board = Chessboard('#myBoard', 'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R')
   // var board = Chessboard('#myBoard', 'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R')
   </script>
