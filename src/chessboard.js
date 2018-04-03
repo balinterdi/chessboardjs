@@ -1370,6 +1370,22 @@
       return isString(code) && code.search(/^[bw]N$/) !== -1;
     }
 
+    function minFile(srcSquare, destSquare) {
+      return Math.min(srcSquare.charCodeAt(0), destSquare.charCodeAt(0));
+    }
+
+    function maxFile(srcSquare, destSquare) {
+      return Math.max(srcSquare.charCodeAt(0), destSquare.charCodeAt(0));
+    }
+
+    function minRank(srcSquare, destSquare) {
+      return Math.min(srcSquare[1], destSquare[1]);
+    }
+
+    function maxRank(srcSquare, destSquare) {
+      return Math.max(srcSquare[1], destSquare[1]);
+    }
+
     function getSquaresFromSourceToDestination(piece, src, dest) {
       var squares = [];
       if (isKnight(piece)) {
