@@ -46,7 +46,9 @@
 }
 
 .shade1 {
-  background-color: aqua;
+  position: absolute;
+  background-color: green;
+  opacity: 0.5;
 }
 
 .notation-322f9 {

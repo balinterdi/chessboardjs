@@ -903,6 +903,29 @@
       return interpolateTemplate(html, CSS);
     }
 
+    function buildSquareHighlightHTML(square) {
+      var html =
+        '<div class="{shade1}' +
+        " " +
+        "square-" +
+        square +
+        '" ' +
+        'style="width:' +
+        squareSize +
+        "px;height:" +
+        squareSize +
+        'px;" ' +
+        'id="highlight-' +
+        squareElsIds[square] +
+        '" ' +
+        'data-square="' +
+        square +
+        '">';
+
+      html += "</div>"; // end .square
+      return interpolateTemplate(html, CSS);
+    }
+
     function buildPieceImgSrc(piece) {
       if (isFunction(config.pieceTheme)) {
         return config.pieceTheme(piece);
@@ -1381,7 +1404,7 @@
 
     function addHighlightsToSquares(squares) {
       squares.forEach(function(square) {
-        $("#" + squareElsIds[square]).addClass("shade1");
+        $("#" + squareElsIds[square]).append(buildSquareHighlightHTML(square));
       });
     }
 
