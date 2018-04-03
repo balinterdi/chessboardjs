@@ -1386,6 +1386,17 @@
       return Math.max(srcSquare[1], destSquare[1]);
     }
 
+    function isDiagonal(srcSquare, destSquare) {
+      var horizontalMoves = Math.abs(
+        destSquare.charCodeAt(0) - srcSquare.charCodeAt(0)
+      );
+      var verticalMoves = Math.abs(
+        parseInt(destSquare[1]) - parseInt(srcSquare[1])
+      );
+      console.log(horizontalMoves, verticalMoves);
+      return horizontalMoves === verticalMoves;
+    }
+
     function getSquaresFromSourceToDestination(piece, src, dest) {
       var squares = [];
       if (isKnight(piece)) {
@@ -1445,7 +1456,7 @@
           ) {
             squares.push(String.fromCharCode(file) + src[1]);
           }
-        } else {
+        } else if (isDiagonal(src, dest)) {
           // diagonal move
           var currSquare = src;
           var dx = dest.charCodeAt(0) > src.charCodeAt(0) ? 1 : -1;
