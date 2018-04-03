@@ -1425,19 +1425,6 @@
         squares.push(dest);
       } else {
         console.log("Non-knight");
-        // for (
-        //   var file = minFile(src, dest);
-        //   file <= maxFile(src, dest);
-        //   file++
-        // ) {
-        //   for (
-        //     var rank = minRank(src, dest);
-        //     rank <= maxRank(src, dest);
-        //     rank++
-        //   ) {
-        //     squares.push(String.fromCharCode(file) + rank);
-        //   }
-        // }
         if (src[0] === dest[0]) {
           // same file, vertical move
           for (
