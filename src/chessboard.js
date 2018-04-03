@@ -40,7 +40,7 @@
   CSS["chessboard"] = "chessboard-63f37";
   CSS["clearfix"] = "clearfix-7da63";
   CSS["highlight1"] = "highlight1-32417";
-  CSS["shade1"] = "shade1";
+  CSS["shade"] = "shade1";
   CSS["highlight2"] = "highlight2-9c5d2";
   CSS["notation"] = "notation-322f9";
   CSS["numeric"] = "numeric-fc462";
@@ -905,7 +905,7 @@
 
     function buildSquareHighlightHTML(square) {
       var html =
-        '<div class="{shade1}' +
+        '<div class="{shade}' +
         " " +
         "square-" +
         square +
@@ -1839,6 +1839,12 @@
     // remove ghost elements
     widget.removeGhosts = function() {
       $board.find("." + CSS.ghost).remove();
+    };
+
+    // set color of square shading
+    // add new classes in CSS for new colors
+    widget.setShadeClassName = function(colorClass) {
+      CSS.shade = colorClass;
     };
 
     // -------------------------------------------------------------------------
