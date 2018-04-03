@@ -1396,25 +1396,70 @@
         var isMoveMoreVertical = dy > dx;
         if (isMoveMoreVertical) {
           for (
-            var rank = Math.min(src[1], dest[1]);
-            rank <= Math.max(src[1], dest[1]);
+            var rank = minRank(src, dest);
+            rank <= maxRank(src, dest);
             rank++
           ) {
             squares.push(src[0] + rank);
           }
         } else {
           for (
-            var file = Math.min(src.charCodeAt(0), dest.charCodeAt(0));
-            file <= Math.max(src.charCodeAt(0), dest.charCodeAt(0));
+            var file = minFile(src, dest);
+            file <= maxFile(src, dest);
             file++
           ) {
             squares.push(String.fromCharCode(file) + src[1]);
           }
         }
         squares.push(dest);
-        console.log(squares);
       } else {
+        console.log("Non-knight");
+        // for (
+        //   var file = minFile(src, dest);
+        //   file <= maxFile(src, dest);
+        //   file++
+        // ) {
+        //   for (
+        //     var rank = minRank(src, dest);
+        //     rank <= maxRank(src, dest);
+        //     rank++
+        //   ) {
+        //     squares.push(String.fromCharCode(file) + rank);
+        //   }
+        // }
+        if (src[0] === dest[0]) {
+          // same file, vertical move
+          for (
+            var rank = minRank(src, dest);
+            rank <= maxRank(src, dest);
+            rank++
+          ) {
+            squares.push(src[0] + rank);
+          }
+        } else if (src[1] === dest[1]) {
+          // same rank, horizontal move
+          for (
+            var file = minRank(src, dest);
+            file <= maxRank(src, dest);
+            file++
+          ) {
+            squares.push(String.fromCharCode(file) + src[1]);
+          }
+        } else {
+          // diagonal move
+          var currSquare = src;
+          var dx = dest.charCodeAt(0) > src.charCodeAt(0) ? 1 : -1;
+          var dy = parseInt(dest[1]) > parseInt(src[1]) ? 1 : -1;
+          squares.push(currSquare);
+          while (currSquare !== dest) {
+            var newFile = String.fromCharCode(currSquare.charCodeAt(0) + dx);
+            var newRank = parseInt(currSquare[1]) + dy;
+            currSquare = newFile + newRank;
+            squares.push(currSquare);
+          }
+        }
       }
+      console.log(squares);
       return squares;
     }
 
