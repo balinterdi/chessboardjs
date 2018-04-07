@@ -1995,8 +1995,10 @@
 
     widget.annotate = function(square, annotation) {
       if (!validSquare(square)) return;
-      var $square = $("#" + squareElsIds[square]);
-      $square.append(buildAnnotationHTML(annotation));
+      $(buildAnnotationHTML(annotation))
+        .hide()
+        .appendTo("#" + squareElsIds[square])
+        .fadeIn(300);
     };
 
     // -------------------------------------------------------------------------
