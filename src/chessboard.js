@@ -908,7 +908,7 @@
 
     function buildSquareShadeHTML(square, className) {
       var html =
-        '<div class="shade {shade}' +
+        '<div class="shade' +
         " " +
         "square-" +
         square +

@@ -45,22 +45,29 @@
   box-shadow: inset 0 0 3px 3px yellow;
 }
 
-.shade1 {
+.shade {
   position: absolute;
+  opacity: 0.5;
+}
+
+.choice-1-shade {
   background-color: green;
-  opacity: 0.5;
 }
 
-.shade-yellow {
-  position: absolute;
+.choice-2-shade {
   background-color: yellow;
-  opacity: 0.5;
 }
 
-.shade-red {
-  position: absolute;
+.choice-3-shade {
   background-color: red;
-  opacity: 0.5;
+}
+
+.choice-4-shade {
+  background-color: purple;
+}
+
+.choice-5-shade {
+  background-color: grey;
 }
 
 .notation-322f9 {
