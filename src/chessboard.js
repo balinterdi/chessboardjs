@@ -708,7 +708,9 @@
     var draggedPiece = null;
     var draggedPieceLocation = null;
     var draggedPieceSource = null;
+    var $draggedShade = null;
     var isDraggingPiece = false;
+    var isDraggingShade = false;
     var sparePiecesElsIds = {};
     var squareElsIds = {};
     var squareElsOffsets = {};
@@ -906,7 +908,7 @@
 
     function buildSquareShadeHTML(square, className) {
       var html =
-        '<div class="{shade}' +
+        '<div class="shade {shade}' +
         " " +
         "square-" +
         square +
@@ -1545,6 +1547,12 @@
       isDraggingPiece = false;
     }
 
+    function beginDraggingShade(draggedShade) {
+      // set state
+      isDraggingShade = true;
+      $draggedShade = draggedShade;
+    }
+
     function beginDraggingPiece(source, piece, x, y) {
       // run their custom onDragStart function
       // their custom onDragStart function can cancel drag start
@@ -1890,9 +1898,25 @@
       // do nothing if there is no piece on this square
       var square = $(this).attr("data-square");
       if (!validSquare(square)) return;
-      if (!currentPosition.hasOwnProperty(square)) return;
+      // checks if piece is on the square
+      if (currentPosition.hasOwnProperty(square)) {
+        beginDraggingPiece(
+          square,
+          currentPosition[square],
+          evt.pageX,
+          evt.pageY
+        );
+      }
 
-      beginDraggingPiece(square, currentPosition[square], evt.pageX, evt.pageY);
+      // chess rank: rearranging colors of squares for re-ranking
+      var $srcSquare = $("#" + squareElsIds[square]);
+      var shades = $srcSquare.find(".shade");
+      if (shades.length > 0) {
+        console.log("Shade here");
+        console.log(shades);
+        beginDraggingShade(shades[0]);
+      }
+      return;
     }
 
     function touchstartSquare(e) {
