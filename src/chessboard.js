@@ -1699,6 +1699,20 @@
         choiceClassNameOfSrcSquare
       );
 
+      // swap the id of the ghost pieces
+      var srcMoveGhostId = choiceClassNameOfSrcSquare.replace("shade", "ghost");
+      var destMoveGhostId = choiceClassNameOfDestSquare.replace(
+        "shade",
+        "ghost"
+      );
+      var srcMoveGhost = $("#" + srcMoveGhostId);
+      console.log(srcMoveGhost);
+      var destMoveGhost = $("#" + destMoveGhostId);
+      console.log(destMoveGhost);
+
+      srcMoveGhost.attr("id", destMoveGhostId);
+      destMoveGhost.attr("id", srcMoveGhostId);
+
       // reset state
       resetShadeDrag();
     }
