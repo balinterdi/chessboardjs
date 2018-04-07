@@ -1663,6 +1663,15 @@
       });
     }
 
+    function swapShadeClasses(srcClassName, destClassName) {
+      // make sure to get the shade elements before swapping begins
+      var srcMoveShades = $("." + srcClassName);
+      var destMoveShades = $("." + destClassName);
+
+      replaceClassInElements(srcMoveShades, srcClassName, destClassName);
+      replaceClassInElements(destMoveShades, destClassName, srcClassName);
+    }
+
     function stopDraggedShade(location) {
       if (!validSquare(location)) {
         resetShadeDrag();
@@ -1684,20 +1693,7 @@
         shades[0]
       );
 
-      // make sure to get the shade elements before swapping begins
-      var srcMoveShades = $("." + choiceClassNameOfSrcSquare);
-      var destMoveShades = $("." + choiceClassNameOfDestSquare);
-
-      replaceClassInElements(
-        srcMoveShades,
-        choiceClassNameOfSrcSquare,
-        choiceClassNameOfDestSquare
-      );
-      replaceClassInElements(
-        destMoveShades,
-        choiceClassNameOfDestSquare,
-        choiceClassNameOfSrcSquare
-      );
+      swapShadeClasses(choiceClassNameOfSrcSquare, choiceClassNameOfDestSquare);
 
       // swap the id of the ghost pieces
       var srcMoveGhostId = choiceClassNameOfSrcSquare.replace("shade", "ghost");
