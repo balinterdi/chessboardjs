@@ -708,7 +708,7 @@
     var draggedPiece = null;
     var draggedPieceLocation = null;
     var draggedPieceSource = null;
-    var isDragging = false;
+    var isDraggingPiece = false;
     var sparePiecesElsIds = {};
     var squareElsIds = {};
     var squareElsOffsets = {};
@@ -1348,7 +1348,7 @@
       $draggedPiece.animate(sourceSquarePosition, opts);
 
       // set state
-      isDragging = false;
+      isDraggingPiece = false;
     }
 
     function trashDraggedPiece() {
@@ -1366,7 +1366,7 @@
       $draggedPiece.fadeOut(config.trashSpeed);
 
       // set state
-      isDragging = false;
+      isDraggingPiece = false;
     }
 
     function isKnight(code) {
@@ -1542,7 +1542,7 @@
       $draggedPiece.animate(targetSquarePosition, opts);
 
       // set state
-      isDragging = false;
+      isDraggingPiece = false;
     }
 
     function beginDraggingPiece(source, piece, x, y) {
@@ -1561,7 +1561,7 @@
       }
 
       // set state
-      isDragging = true;
+      isDraggingPiece = true;
       draggedPiece = piece;
       draggedPieceSource = source;
 
@@ -1938,7 +1938,7 @@
     }
 
     function mousemoveWindow(evt) {
-      if (isDragging) {
+      if (isDraggingPiece) {
         updateDraggedPiece(evt.pageX, evt.pageY);
       }
     }
@@ -1950,7 +1950,7 @@
 
     function touchmoveWindow(evt) {
       // do nothing if we are not dragging a piece
-      if (!isDragging) return;
+      if (!isDraggingPiece) return;
 
       // prevent screen from scrolling
       evt.preventDefault();
@@ -1978,7 +1978,7 @@
 
     function touchendWindow(evt) {
       // do nothing if we are not dragging a piece
-      if (!isDragging) return;
+      if (!isDraggingPiece) return;
 
       // get the location
       var location = isXYOnSquare(
@@ -1992,7 +1992,7 @@
     function mouseenterSquare(evt) {
       // do not fire this event if we are dragging a piece
       // NOTE: this should never happen, but it's a safeguard
-      if (isDragging) return;
+      if (isDraggingPiece) return;
 
       // exit if they did not provide a onMouseoverSquare function
       if (!isFunction(config.onMouseoverSquare)) return;
@@ -2021,7 +2021,7 @@
     function mouseleaveSquare(evt) {
       // do not fire this event if we are dragging a piece
       // NOTE: this should never happen, but it's a safeguard
-      if (isDragging) return;
+      if (isDraggingPiece) return;
 
       // exit if they did not provide an onMouseoutSquare function
       if (!isFunction(config.onMouseoutSquare)) return;
