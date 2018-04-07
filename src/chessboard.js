@@ -1642,7 +1642,7 @@
       draggedPieceLocation = location;
     }
 
-    function getChoiceClassOfShadeElement(domElement) {
+    function getChoiceClassOfShadeOrPieceElement(domElement) {
       var classes = domElement.className.split(/\s+/);
       for (var i = 0; i < classes.length; i++) {
         if (classes[i].indexOf("choice") !== -1) {
@@ -1677,12 +1677,12 @@
       }
 
       // swap shade classes of the $draggedShade and the $destSquare
-      var choiceClassNameOfSrcSquare = getChoiceClassOfShadeElement(
+      var choiceClassNameOfSrcSquare = getChoiceClassOfShadeOrPieceElement(
         $draggedShade
       );
-      console.log(choiceClassNameOfSrcSquare);
-      var choiceClassNameOfDestSquare = getChoiceClassOfShadeElement(shades[0]);
-      console.log(choiceClassNameOfDestSquare);
+      var choiceClassNameOfDestSquare = getChoiceClassOfShadeOrPieceElement(
+        shades[0]
+      );
 
       // make sure to get the shade elements before swapping begins
       var srcMoveShades = $("." + choiceClassNameOfSrcSquare);
