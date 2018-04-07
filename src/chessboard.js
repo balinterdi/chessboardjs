@@ -694,6 +694,7 @@
     var $draggedPiece = null;
     var $sparePiecesTop = null;
     var $sparePiecesBottom = null;
+    var $draggedShade = null;
 
     // constructor return object
     var widget = {};
@@ -708,7 +709,6 @@
     var draggedPiece = null;
     var draggedPieceLocation = null;
     var draggedPieceSource = null;
-    var $draggedShade = null;
     var isDraggingPiece = false;
     var isDraggingShade = false;
     var sparePiecesElsIds = {};
