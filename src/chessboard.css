@@ -51,22 +51,23 @@
 }
 
 .choice-1-shade {
+.choice-shade-1 {
   background-color: green;
 }
 
-.choice-2-shade {
+.choice-shade-2 {
   background-color: yellow;
 }
 
-.choice-3-shade {
+.choice-shade-3 {
   background-color: red;
 }
 
-.choice-4-shade {
+.choice-shade-4 {
   background-color: purple;
 }
 
-.choice-5-shade {
+.choice-shade-5 {
   background-color: grey;
 }
 

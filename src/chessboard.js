@@ -1484,12 +1484,12 @@
 
     function getGhostElementId() {
       // id for <img> of the ghost piece
-      return "choice-" + moveChoices.length + "-piece";
+      return "choice-ghost-" + numMoveChoices;
     }
 
     function getShadeElementClass() {
       // className for green, yellow, red, etc. shade <div>s of the move choice
-      return "choice-" + moveChoices.length + "-shade";
+      return "choice-shade-" + numMoveChoices;
     }
 
     function dropDraggedPieceOnSquare(square) {
