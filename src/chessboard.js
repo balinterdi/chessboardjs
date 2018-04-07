@@ -1405,7 +1405,6 @@
     function getSquaresFromSourceToDestination(piece, src, dest) {
       var squares = [];
       if (isKnight(piece)) {
-        console.log("Is knight");
         var dx = Math.abs(dest.charCodeAt(0) - src.charCodeAt(0));
         var dy = Math.abs(dest[1] - src[1]);
         console.log(dx, dy);
@@ -1429,7 +1428,6 @@
         }
         squares.push(dest);
       } else {
-        console.log("Non-knight");
         if (src[0] === dest[0]) {
           // same file, vertical move
           for (
