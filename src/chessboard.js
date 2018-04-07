@@ -1399,7 +1399,7 @@
       var verticalMoves = Math.abs(
         parseInt(destSquare[1]) - parseInt(srcSquare[1])
       );
-      console.log(horizontalMoves, verticalMoves);
+      // console.log(horizontalMoves, verticalMoves);
       return horizontalMoves === verticalMoves;
     }
 
@@ -1408,7 +1408,7 @@
       if (isKnight(piece)) {
         var dx = Math.abs(dest.charCodeAt(0) - src.charCodeAt(0));
         var dy = Math.abs(dest[1] - src[1]);
-        console.log(dx, dy);
+        // console.log(dx, dy);
         var isMoveMoreVertical = dy > dx;
         if (isMoveMoreVertical) {
           for (
@@ -1986,8 +1986,6 @@
       var $srcSquare = $("#" + squareElsIds[square]);
       var shades = $srcSquare.find(".shade");
       if (shades.length > 0) {
-        console.log("Shade here");
-        console.log(shades);
         beginDraggingShade(shades[0]);
       }
       return;
