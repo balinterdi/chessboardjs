@@ -62,7 +62,6 @@
 
 .annotation {
   z-index: 999;
-  width: 90px;
   position: absolute;
   background-color: white;
   border-radius: 15px 15px 15px 0px;
