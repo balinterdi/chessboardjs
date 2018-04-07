@@ -29,6 +29,8 @@
   var DEFAULT_SNAPBACK_SPEED = 60;
   var DEFAULT_SNAP_SPEED = 30;
   var DEFAULT_TRASH_SPEED = 100;
+  var DEFAULT_ANNOTATION_FADE_IN = 300;
+  var DEFAULT_ANNOTATION_FADE_OUT = 500;
 
   // use unique class names to prevent clashing with anything else on the page
   // and simplify selectors
@@ -2050,16 +2052,19 @@
       return;
     }
 
+    function fadeOutAndRemove(domElement, fadeOutTime) {
+      if (!isInteger(fadeOutTime)) return;
+      $(domElement).fadeOut(fadeOutTime, function() {
+        $(this).remove();
+      });
+    }
+
     function clickHandler(evt) {
       // Allow user to click to remove annotations from the board
       if (evt.target.className === CSS["annotation"]) {
-        $(evt.target).fadeOut(300, function() {
-          $(this).remove();
-        });
+        fadeOutAndRemove(evt.target, DEFAULT_ANNOTATION_FADE_OUT);
       } else if (evt.target.parentNode.className === CSS["annotation"]) {
-        $(evt.target.parentNode).fadeOut(300, function() {
-          $(this).remove();
-        });
+        fadeOutAndRemove(evt.target.parentNode, DEFAULT_ANNOTATION_FADE_OUT);
       }
     }
 
