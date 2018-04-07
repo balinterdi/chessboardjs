@@ -1454,8 +1454,8 @@
         } else if (src[1] === dest[1]) {
           // same rank, horizontal move
           for (
-            var file = minRank(src, dest);
-            file <= maxRank(src, dest);
+            var file = minFile(src, dest);
+            file <= maxFile(src, dest);
             file++
           ) {
             squares.push(String.fromCharCode(file) + src[1]);
