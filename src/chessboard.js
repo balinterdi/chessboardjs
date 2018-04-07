@@ -1462,7 +1462,7 @@
       return squares;
     }
 
-    function addHighlightsToSquares(squares) {
+    function addShadeToSquares(squares) {
       squares.forEach(function(square) {
         $("#" + squareElsIds[square]).append(buildSquareHighlightHTML(square));
       });
@@ -1515,7 +1515,7 @@
             draggedPieceSource,
             square
           );
-          addHighlightsToSquares(squares);
+          addShadeToSquares(squares);
         }
 
         // execute their onSnapEnd function
