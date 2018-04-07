@@ -2005,7 +2005,7 @@
       $elem
         .hide()
         .appendTo("#" + squareElsIds[square])
-        .fadeIn(300);
+        .fadeIn(DEFAULT_ANNOTATION_FADE_IN);
 
       // After mounting element onto the DOM:
       // play the animation for the text inside the <p> tag of the annotation
