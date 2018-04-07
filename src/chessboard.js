@@ -2035,6 +2035,15 @@
       return;
     }
 
+    function clickHandler(evt) {
+      // Allow user to click to remove annotations from the board
+      if (evt.target.className === CSS["annotation"]) {
+        $(evt.target).fadeOut(300);
+      } else if (evt.target.parentNode.className === CSS["annotation"]) {
+        $(evt.target.parentNode).fadeOut(300);
+      }
+    }
+
     function touchstartSquare(e) {
       // do nothing if we're not draggable
       if (!config.draggable) return;
@@ -2202,6 +2211,7 @@
 
       // mouse drag pieces
       $board.on("mousedown", "." + CSS.square, mousedownSquare);
+      $board.on("click", clickHandler);
       $container.on(
         "mousedown",
         "." + CSS.sparePieces + " ." + CSS.piece,
