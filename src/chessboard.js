@@ -1700,11 +1700,13 @@
     }
 
     function stopDraggedShade(location) {
+      // do nothing if user drops on a non-square
       if (!validSquare(location)) {
         resetShadeDrag();
         return;
       }
 
+      // do nothing if user drops on a unshaded square
       var $destSquare = $("#" + squareElsIds[location]);
       var shades = $destSquare.find(".shade");
       if (shades.length === 0) {
