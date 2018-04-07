@@ -2038,9 +2038,13 @@
     function clickHandler(evt) {
       // Allow user to click to remove annotations from the board
       if (evt.target.className === CSS["annotation"]) {
-        $(evt.target).fadeOut(300);
+        $(evt.target).fadeOut(300, function() {
+          $(this).remove();
+        });
       } else if (evt.target.parentNode.className === CSS["annotation"]) {
-        $(evt.target.parentNode).fadeOut(300);
+        $(evt.target.parentNode).fadeOut(300, function() {
+          $(this).remove();
+        });
       }
     }
 
