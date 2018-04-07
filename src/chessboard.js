@@ -716,7 +716,8 @@
     var squareElsOffsets = {};
     var squareSize = 16;
     var addGhost = false;
-    var moveChoices = [];
+    var moveChoices = {};
+    var numMoveChoices = 0;
 
     // -------------------------------------------------------------------------
     // Validation / Errors
@@ -1473,13 +1474,17 @@
     }
 
     function addMoveChoice() {
-      moveChoices.push({ from: draggedPieceSource, to: draggedPieceLocation });
-      // console.log("Added a move choice: ");
-      // console.log(moveChoices);
+      numMoveChoices++;
+      moveChoices[numMoveChoices] = {
+        from: draggedPieceSource,
+        to: draggedPieceLocation
+      };
+      console.log(moveChoices);
     }
 
     function clearMoveChoices() {
-      moveChoices = [];
+      moveChoices = {};
+      numMoveChoices = 0;
     }
 
     function getGhostElementId() {
