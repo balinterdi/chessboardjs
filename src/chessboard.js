@@ -714,6 +714,7 @@
     var squareElsOffsets = {};
     var squareSize = 16;
     var addGhost = false;
+    var moveChoices = [];
 
     // -------------------------------------------------------------------------
     // Validation / Errors
@@ -1467,6 +1468,15 @@
       });
     }
 
+    function addMoveChoice() {
+      moveChoices.push({ from: draggedPieceSource, to: draggedPieceLocation });
+      // console.log("Added a move choice: ");
+      // console.log(moveChoices);
+    }
+
+    function clearMoveChoices() {
+      moveChoices = [];
+    }
     function dropDraggedPieceOnSquare(square) {
       removeSquareHighlights();
 
@@ -1475,6 +1485,9 @@
       delete newPosition[draggedPieceSource];
       newPosition[square] = draggedPiece;
       setCurrentPosition(newPosition);
+
+      // add move to moveChoices array (chess rank)
+      addMoveChoice();
 
       // get target square information
       var targetSquarePosition = $("#" + squareElsIds[square]).offset();
