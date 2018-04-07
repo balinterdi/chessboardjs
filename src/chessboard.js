@@ -1017,7 +1017,11 @@
 
     function buildAnnotationHTML(annotation) {
       var html = "<div " + 'class="{annotation}" >';
-      html += "<p>" + annotation + "</p>";
+      if (annotation) {
+        html += "<p>" + annotation + "</p>";
+      } else {
+        html += "<p></p>";
+      }
       html += "</div>";
 
       return interpolateTemplate(html, CSS);
@@ -1993,12 +1997,19 @@
       CSS.shade = colorClass;
     };
 
-    widget.annotate = function(square, annotation) {
+    widget.annotate = function(square, annotation, animation) {
       if (!validSquare(square)) return;
-      $(buildAnnotationHTML(annotation))
+      var $elem = $(buildAnnotationHTML(annotation));
+      $elem
         .hide()
         .appendTo("#" + squareElsIds[square])
         .fadeIn(300);
+
+      // After mounting element onto the DOM:
+      // play the animation for the text inside the <p> tag of the annotation
+      if (isFunction(animation)) {
+        animation.call($elem.find("p")[0]);
+      }
     };
 
     widget.removeAnnotations = function() {

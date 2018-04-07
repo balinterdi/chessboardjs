@@ -30,7 +30,20 @@
     board.setAddGhost(true);
     board.annotate('e4', 'Nice move!');
     board.annotate('a8', 'Cool!');
-    setTimeout(board.annotate, 1000, 'g3', 'Sick annotations BROOO!');
+    setTimeout(board.annotate, 1000, 'g3', null, function () {
+      $(this).prop('Counter', 0).animate({
+        Counter: 100
+      }, {
+          duration: 1000,
+          easing: 'swing',
+          step: function (now) {
+            var next = Math.ceil(now);
+            var sign = next >= 0 ? "+" : "";
+            $(this).text(sign + next);
+          }
+        });
+    });
+    // setTimeout(board.removeAnnotations, 3000);
 
   // var board = Chessboard('#myBoard', 'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R')
   // var board = Chessboard('#myBoard', 'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R')
