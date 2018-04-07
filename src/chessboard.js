@@ -1999,7 +1999,12 @@
       CSS.shade = colorClass;
     };
 
-    widget.annotate = function(square, annotation, animation) {
+    widget.annotate = function(
+      square,
+      annotation,
+      lifetime,
+      textAnimationCallback
+    ) {
       if (!validSquare(square)) return;
       var $elem = $(buildAnnotationHTML(annotation));
       $elem
@@ -2009,8 +2014,19 @@
 
       // After mounting element onto the DOM:
       // play the animation for the text inside the <p> tag of the annotation
-      if (isFunction(animation)) {
-        animation.call($elem.find("p")[0]);
+      if (isFunction(textAnimationCallback)) {
+        textAnimationCallback.call($elem.find("p")[0]);
+      }
+
+      // fadeOut and remove the DOM element after a delay
+      if (isInteger(lifetime)) {
+        // lifetime in milliseconds
+        setTimeout(
+          fadeOutAndRemove,
+          lifetime,
+          $elem,
+          DEFAULT_ANNOTATION_FADE_OUT
+        );
       }
     };
 

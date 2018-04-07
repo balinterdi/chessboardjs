@@ -28,9 +28,9 @@
     })
 
     board.setAddGhost(true);
-    board.annotate('e4', 'Nice move!');
-    board.annotate('a8', 'Cool!');
-    setTimeout(board.annotate, 1000, 'g3', null, function () {
+    board.annotate('e4', 'Nice move!', 1000);
+    board.annotate('a8', 'Cool!', 1000);
+    setTimeout(board.annotate, 1000, 'g3', null, 1000, function () {
       $(this).prop('Counter', 0).animate({
         Counter: 100
       }, {
