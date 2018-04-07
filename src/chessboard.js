@@ -1651,6 +1651,11 @@
       }
     }
 
+    function resetShadeDrag() {
+      isDraggingShade = false;
+      $draggedShade = null;
+    }
+
     function replaceClassInElements(domElements, classToRemove, classToAdd) {
       domElements.each(function(index, element) {
         $(element).removeClass(classToRemove);
@@ -1659,12 +1664,17 @@
     }
 
     function stopDraggedShade(location) {
-      console.log(location);
-      if (!validSquare(location)) return;
+      if (!validSquare(location)) {
+        resetShadeDrag();
+        return;
+      }
 
       var $destSquare = $("#" + squareElsIds[location]);
       var shades = $destSquare.find(".shade");
-      if (shades.length === 0) return;
+      if (shades.length === 0) {
+        resetShadeDrag();
+        return;
+      }
 
       // swap shade classes of the $draggedShade and the $destSquare
       var choiceClassNameOfSrcSquare = getChoiceClassOfShadeElement(
@@ -1690,8 +1700,7 @@
       );
 
       // reset state
-      isDraggingShade = false;
-      $draggedShade = null;
+      resetShadeDrag();
     }
 
     function stopDraggedPiece(location) {
