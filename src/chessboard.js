@@ -1716,6 +1716,13 @@
 
       var srcClass = getChoiceClassOfShadeOrPieceElement($draggedShade);
       var destClass = getChoiceClassOfShadeOrPieceElement(shades[0]);
+
+      // do nothing if user drops on a shaded square of the same color
+      if (srcClass === destClass) {
+        resetShadeDrag();
+        return;
+      }
+
       // swap shade classes of the $draggedShade and the $destSquare
       swapShadeClasses(srcClass, destClass);
       // swap ghost piece ids of the corresponding moves
