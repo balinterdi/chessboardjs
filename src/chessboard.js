@@ -1637,6 +1637,58 @@
       draggedPieceLocation = location;
     }
 
+    function getChoiceClassOfShadeElement(domElement) {
+      var classes = domElement.className.split(/\s+/);
+      for (var i = 0; i < classes.length; i++) {
+        if (classes[i].indexOf("choice") !== -1) {
+          return classes[i];
+        }
+      }
+    }
+
+    function replaceClassInElements(domElements, classToRemove, classToAdd) {
+      domElements.each(function(index, element) {
+        $(element).removeClass(classToRemove);
+        $(element).addClass(classToAdd);
+      });
+    }
+
+    function stopDraggedShade(location) {
+      console.log(location);
+      if (!validSquare(location)) return;
+
+      var $destSquare = $("#" + squareElsIds[location]);
+      var shades = $destSquare.find(".shade");
+      if (shades.length === 0) return;
+
+      // swap shade classes of the $draggedShade and the $destSquare
+      var choiceClassNameOfSrcSquare = getChoiceClassOfShadeElement(
+        $draggedShade
+      );
+      console.log(choiceClassNameOfSrcSquare);
+      var choiceClassNameOfDestSquare = getChoiceClassOfShadeElement(shades[0]);
+      console.log(choiceClassNameOfDestSquare);
+
+      // make sure to get the shade elements before swapping begins
+      var srcMoveShades = $("." + choiceClassNameOfSrcSquare);
+      var destMoveShades = $("." + choiceClassNameOfDestSquare);
+
+      replaceClassInElements(
+        srcMoveShades,
+        choiceClassNameOfSrcSquare,
+        choiceClassNameOfDestSquare
+      );
+      replaceClassInElements(
+        destMoveShades,
+        choiceClassNameOfDestSquare,
+        choiceClassNameOfSrcSquare
+      );
+
+      // reset state
+      isDraggingShade = false;
+      $draggedShade = null;
+    }
+
     function stopDraggedPiece(location) {
       // determine what the action should be
       var action = "drop";
@@ -1989,13 +2041,18 @@
     );
 
     function mouseupWindow(evt) {
-      // do nothing if we are not dragging a piece
-      if (!isDragging) return;
-
       // get the location
       var location = isXYOnSquare(evt.pageX, evt.pageY);
 
-      stopDraggedPiece(location);
+      if (isDraggingPiece) {
+        stopDraggedPiece(location);
+      } else if (isDraggingShade) {
+        // console.log("Stopped dragging shade");
+        stopDraggedShade(location);
+      }
+
+      // do nothing if we are not dragging a piece or shade
+      return;
     }
 
     function touchendWindow(evt) {
