@@ -1672,6 +1672,14 @@
       replaceClassInElements(destMoveShades, destClassName, srcClassName);
     }
 
+    function swapGhostIds(srcMoveGhostId, destMoveGhostId) {
+      // swap the id of the ghost pieces
+      var srcMoveGhost = $("#" + srcMoveGhostId);
+      var destMoveGhost = $("#" + destMoveGhostId);
+
+      srcMoveGhost.attr("id", destMoveGhostId);
+      destMoveGhost.attr("id", srcMoveGhostId);
+    }
     function stopDraggedShade(location) {
       if (!validSquare(location)) {
         resetShadeDrag();
@@ -1685,29 +1693,16 @@
         return;
       }
 
+      var srcClass = getChoiceClassOfShadeOrPieceElement($draggedShade);
+      var destClass = getChoiceClassOfShadeOrPieceElement(shades[0]);
       // swap shade classes of the $draggedShade and the $destSquare
-      var choiceClassNameOfSrcSquare = getChoiceClassOfShadeOrPieceElement(
-        $draggedShade
+      swapShadeClasses(srcClass, destClass);
+      // swap ghost piece ids of the corresponding moves
+      swapGhostIds(
+        srcClass.replace("shade", "ghost"),
+        destClass.replace("shade", "ghost")
       );
-      var choiceClassNameOfDestSquare = getChoiceClassOfShadeOrPieceElement(
-        shades[0]
       );
-
-      swapShadeClasses(choiceClassNameOfSrcSquare, choiceClassNameOfDestSquare);
-
-      // swap the id of the ghost pieces
-      var srcMoveGhostId = choiceClassNameOfSrcSquare.replace("shade", "ghost");
-      var destMoveGhostId = choiceClassNameOfDestSquare.replace(
-        "shade",
-        "ghost"
-      );
-      var srcMoveGhost = $("#" + srcMoveGhostId);
-      console.log(srcMoveGhost);
-      var destMoveGhost = $("#" + destMoveGhostId);
-      console.log(destMoveGhost);
-
-      srcMoveGhost.attr("id", destMoveGhostId);
-      destMoveGhost.attr("id", srcMoveGhostId);
 
       // reset state
       resetShadeDrag();
