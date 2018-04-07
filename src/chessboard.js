@@ -41,6 +41,7 @@
   CSS["clearfix"] = "clearfix-7da63";
   CSS["highlight1"] = "highlight1-32417";
   CSS["shade"] = "shade1";
+  CSS["annotation"] = "annotation";
   CSS["highlight2"] = "highlight2-9c5d2";
   CSS["notation"] = "notation-322f9";
   CSS["numeric"] = "numeric-fc462";
@@ -1014,6 +1015,14 @@
       return html;
     }
 
+    function buildAnnotationHTML(annotation) {
+      var html = "<div " + 'class="{annotation}" >';
+      html += "<p>" + annotation + "</p>";
+      html += "</div>";
+
+      return interpolateTemplate(html, CSS);
+    }
+
     // -------------------------------------------------------------------------
     // Animations
     // -------------------------------------------------------------------------
@@ -1982,6 +1991,12 @@
     // add new classes in CSS for new colors
     widget.setShadeClassName = function(colorClass) {
       CSS.shade = colorClass;
+    };
+
+    widget.annotate = function(square, annotation) {
+      if (!validSquare(square)) return;
+      var $square = $("#" + squareElsIds[square]);
+      $square.append(buildAnnotationHTML(annotation));
     };
 
     // -------------------------------------------------------------------------

@@ -60,6 +60,23 @@
   cursor: -webkit-grabbing;
 }
 
+.annotation {
+  z-index: 999;
+  width: 90px;
+  position: absolute;
+  background-color: white;
+  border-radius: 15px 15px 15px 0px;
+  bottom: 30px;
+  left: 30px;
+  box-shadow: 3px 3px 1px rgba(128, 128, 128, 0.6);
+}
+
+.annotation p {
+  font-family: Helvetica, Arial, sans-serif;
+  text-align: center;
+  margin: 10px;
+}
+
 .choice-shade-1 {
   background-color: green;
 }
