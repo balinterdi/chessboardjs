@@ -1680,6 +1680,25 @@
       srcMoveGhost.attr("id", destMoveGhostId);
       destMoveGhost.attr("id", srcMoveGhostId);
     }
+
+    function swapRankings(rank1, rank2) {
+      // ranks must exist
+      if (!moveChoices[rank1]) return;
+      if (!moveChoices[rank2]) return;
+      var tmpMove = moveChoices[rank1];
+      moveChoices[rank1] = moveChoices[rank2];
+      moveChoices[rank2] = tmpMove;
+      console.log("================");
+      console.log("Reranked");
+      console.log(moveChoices);
+      console.log("================");
+    }
+
+    function getRankFromClassString(className) {
+      // e.g. get 1 from className 'choice-shade-1'
+      return className[className.length - 1];
+    }
+
     function stopDraggedShade(location) {
       if (!validSquare(location)) {
         resetShadeDrag();
@@ -1702,6 +1721,10 @@
         srcClass.replace("shade", "ghost"),
         destClass.replace("shade", "ghost")
       );
+      // swap the move choice ranking
+      swapRankings(
+        getRankFromClassString(srcClass),
+        getRankFromClassString(destClass)
       );
 
       // reset state
