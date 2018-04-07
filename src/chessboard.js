@@ -1477,6 +1477,11 @@
     function clearMoveChoices() {
       moveChoices = [];
     }
+
+    function getGhostElementId() {
+      // id for <img> of the ghost piece
+      return "choice-" + moveChoices.length + "-piece";
+    }
     function dropDraggedPieceOnSquare(square) {
       removeSquareHighlights();
 
@@ -1500,7 +1505,9 @@
         // add ghost element
         if (addGhost) {
           var $destSquare = $("#" + squareElsIds[square]);
-          $destSquare.append(buildGhostHTML(draggedPiece, false));
+          $destSquare.append(
+            buildGhostHTML(draggedPiece, false, getGhostElementId())
+          );
           // add highlights from src to ghost
           // calculate highlights
           var squares = getSquaresFromSourceToDestination(
