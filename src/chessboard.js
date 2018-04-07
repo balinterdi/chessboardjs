@@ -904,19 +904,21 @@
       return interpolateTemplate(html, CSS);
     }
 
-    function buildSquareHighlightHTML(square) {
+    function buildSquareShadeHTML(square, className) {
       var html =
         '<div class="{shade}' +
         " " +
         "square-" +
         square +
+        " " +
+        className +
         '" ' +
         'style="width:' +
         squareSize +
         "px;height:" +
         squareSize +
         'px;" ' +
-        'id="highlight-' +
+        'id="shade-' +
         squareElsIds[square] +
         '" ' +
         'data-square="' +
@@ -1464,7 +1466,9 @@
 
     function addShadeToSquares(squares) {
       squares.forEach(function(square) {
-        $("#" + squareElsIds[square]).append(buildSquareHighlightHTML(square));
+        $("#" + squareElsIds[square]).append(
+          buildSquareShadeHTML(square, getShadeElementClass())
+        );
       });
     }
 
@@ -1482,6 +1486,12 @@
       // id for <img> of the ghost piece
       return "choice-" + moveChoices.length + "-piece";
     }
+
+    function getShadeElementClass() {
+      // className for green, yellow, red, etc. shade <div>s of the move choice
+      return "choice-" + moveChoices.length + "-shade";
+    }
+
     function dropDraggedPieceOnSquare(square) {
       removeSquareHighlights();
 
