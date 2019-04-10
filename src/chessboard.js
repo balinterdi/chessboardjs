@@ -9,8 +9,6 @@
 (function() {
   "use strict";
 
-  var $ = window["jQuery"];
-
   // ---------------------------------------------------------------------------
   // Constants
   // ---------------------------------------------------------------------------
@@ -18,7 +16,6 @@
   var COLUMNS = "abcdefgh".split("");
   var DEFAULT_DRAG_THROTTLE_RATE = 20;
   var ELLIPSIS = "…";
-  var MINIMUM_JQUERY_VERSION = "1.8.3";
   var RUN_ASSERTS = true;
   var START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
   var START_POSITION = fenToObj(START_FEN);
@@ -275,8 +272,12 @@
     console.assert(!validFen({}));
   }
 
+  function isPlainObject(obj) {
+    return obj !== null && typeof obj === 'object';
+  }
+
   function validPositionObject(pos) {
-    if (!$.isPlainObject(pos)) return false;
+    if (!isPlainObject(pos)) return false;
 
     for (var i in pos) {
       if (!pos.hasOwnProperty(i)) continue;
@@ -303,15 +304,6 @@
 
   function isTouchDevice() {
     return "ontouchstart" in document.documentElement;
-  }
-
-  function validJQueryVersion() {
-    return (
-      typeof window.$ &&
-      $.fn &&
-      $.fn.jquery &&
-      validSemanticVersion($.fn.jquery, MINIMUM_JQUERY_VERSION)
-    );
   }
 
   // ---------------------------------------------------------------------------
@@ -566,7 +558,7 @@
     }
 
     // config must be an object
-    if (!$.isPlainObject(config)) config = {};
+    if (!isPlainObject(config)) config = {};
 
     return config;
   }
@@ -622,25 +614,7 @@
   // Dependencies
   // ---------------------------------------------------------------------------
 
-  // check for a compatible version of jQuery
-  function checkJQuery() {
-    if (!validJQueryVersion()) {
-      var errorMsg =
-        "Chessboard Error 1005: Unable to find a valid version of jQuery. " +
-        "Please include jQuery " +
-        MINIMUM_JQUERY_VERSION +
-        " or higher on the page" +
-        "\n\n" +
-        "Exiting" +
-        ELLIPSIS;
-      window.alert(errorMsg);
-      return false;
-    }
-
-    return true;
-  }
-
-  // return either boolean false or the $container element
+  // return either boolean false or the container element
   function checkContainerArg(containerElOrString) {
     if (containerElOrString === "") {
       var errorMsg1 =
@@ -653,17 +627,8 @@
       return false;
     }
 
-    // convert containerEl to query selector if it is a string
-    if (
-      isString(containerElOrString) &&
-      containerElOrString.charAt(0) !== "#"
-    ) {
-      containerElOrString = "#" + containerElOrString;
-    }
-
-    // containerEl must be something that becomes a jQuery collection of size 1
-    var $container = $(containerElOrString);
-    if ($container.length !== 1) {
+    var container = document.querySelector(containerElOrString);
+    if (!container) {
       var errorMsg2 =
         "Chessboard Error 1003: " +
         "The first argument to Chessboard() must be the ID of a DOM node, " +
@@ -675,7 +640,7 @@
       return false;
     }
 
-    return $container;
+    return container;
   }
 
   // ---------------------------------------------------------------------------
@@ -684,20 +649,19 @@
 
   function constructor(containerElOrString, config) {
     // first things first: check basic dependencies
-    if (!checkJQuery()) return null;
-    var $container = checkContainerArg(containerElOrString);
-    if (!$container) return null;
+    var container = checkContainerArg(containerElOrString);
+    if (!container) return null;
 
     // ensure the config object is what we expect
     config = expandConfigArgumentShorthand(config);
     config = expandConfig(config);
 
     // DOM elements
-    var $board = null;
-    var $draggedPiece = null;
-    var $sparePiecesTop = null;
-    var $sparePiecesBottom = null;
-    var $draggedShade = null;
+    var board = null;
+    var draggedPiece = null;
+    var sparePiecesTop = null;
+    var sparePiecesBottom = null;
+    var draggedShade = null;
 
     // constructor return object
     var widget = {};
@@ -796,7 +760,12 @@
     // fudge factor, and then keep reducing until we find an exact mod 8 for
     // our square size
     function calculateSquareSize() {
-      var containerWidth = parseInt($container.width(), 10);
+      let containerWidth = container.offsetWidth;
+      if (!containerWidth) {
+        let { width } = container.style;
+        let match = width.match(/(\d+)px/);
+        containerWidth = match ? match[1] : 0;
+      }
 
       // defensive, prevent infinite loop
       if (!containerWidth || containerWidth <= 0) {
@@ -1035,10 +1004,10 @@
 
     function animateSquareToSquare(src, dest, piece, completeFn) {
       // get information about the source and destination squares
-      var $srcSquare = $("#" + squareElsIds[src]);
-      var srcSquarePosition = $srcSquare.offset();
-      var $destSquare = $("#" + squareElsIds[dest]);
-      var destSquarePosition = $destSquare.offset();
+      let srcSquare = document.getElementById(squareElsIds[src]);
+      var srcSquarePosition = srcSquare.offset();
+      let destSquare = document.getElementById(squareElsIds[dest]);
+      var destSquarePosition = destSquare.offset();
 
       // create the animated piece and absolutely position it
       // over the source square
@@ -1248,29 +1217,36 @@
 
     function drawPositionInstant() {
       // clear the board
-      $board.find("." + CSS.piece).remove();
+      let pieces = board.querySelectorAll("." + CSS.piece);
+      for (let piece of pieces) {
+        piece.parentNode.removeChild(piece);
+      }
 
       // add the pieces
-      for (var i in currentPosition) {
+      for (let i in currentPosition) {
         if (!currentPosition.hasOwnProperty(i)) continue;
-
-        $("#" + squareElsIds[i]).append(buildPieceHTML(currentPosition[i]));
+        //FIXME: At this point, the board should be drawn with the squares
+        // and the numbers and letters on it, so querySelector shouldn't return null
+        getBoard().querySelector("#" + squareElsIds[i]).innerHTML += buildPieceHTML(currentPosition[i]);
       }
     }
 
+    function getBoard() {
+      return document.querySelector('.' + CSS.board);
+    }
+
     function drawBoard() {
-      $board.html(
-        buildBoardHTML(currentOrientation, squareSize, config.showNotation)
-      );
+      //NOTE: board.innerHTML doesn't update the DOM and I'm not sure why
+      getBoard().innerHTML = buildBoardHTML(currentOrientation, squareSize, config.showNotation);
       drawPositionInstant();
 
       if (config.sparePieces) {
         if (currentOrientation === "white") {
-          $sparePiecesTop.html(buildSparePiecesHTML("black"));
-          $sparePiecesBottom.html(buildSparePiecesHTML("white"));
+          sparePiecesTop.innerHTML = buildSparePiecesHTML("black");
+          sparePiecesBottom.innerHTML = buildSparePiecesHTML("white");
         } else {
-          $sparePiecesTop.html(buildSparePiecesHTML("white"));
-          $sparePiecesBottom.html(buildSparePiecesHTML("black"));
+          sparePiecesTop.innerHTML = buildSparePiecesHTML("white");
+          sparePiecesBottom.innerHTML = buildSparePiecesHTML("black");
         }
       }
     }
@@ -1323,7 +1299,7 @@
     }
 
     function removeSquareHighlights() {
-      $board
+      board
         .find("." + CSS.square)
         .removeClass(CSS.highlight1 + " " + CSS.highlight2);
     }
@@ -1340,7 +1316,7 @@
       // animation complete
       function complete() {
         drawPositionInstant();
-        $draggedPiece.css("display", "none");
+        draggedPiece.css("display", "none");
 
         // run their onSnapbackEnd function
         if (isFunction(config.onSnapbackEnd)) {
@@ -1363,7 +1339,7 @@
         duration: config.snapbackSpeed,
         complete: complete
       };
-      $draggedPiece.animate(sourceSquarePosition, opts);
+      draggedPiece.animate(sourceSquarePosition, opts);
 
       // set state
       isDraggingPiece = false;
@@ -1381,7 +1357,7 @@
       drawPositionInstant();
 
       // hide the dragged piece
-      $draggedPiece.fadeOut(config.trashSpeed);
+      draggedPiece.fadeOut(config.trashSpeed);
 
       // set state
       isDraggingPiece = false;
@@ -1530,7 +1506,7 @@
       // animation complete
       function onAnimationComplete() {
         drawPositionInstant();
-        $draggedPiece.css("display", "none");
+        draggedPiece.css("display", "none");
 
         // add ghost element
         if (addGhost) {
@@ -1559,7 +1535,7 @@
         duration: config.snapSpeed,
         complete: onAnimationComplete
       };
-      $draggedPiece.animate(targetSquarePosition, opts);
+      draggedPiece.animate(targetSquarePosition, opts);
 
       // set state
       isDraggingPiece = false;
@@ -1568,7 +1544,7 @@
     function beginDraggingShade(draggedShade) {
       // set state
       isDraggingShade = true;
-      $draggedShade = draggedShade;
+      draggedShade = draggedShade;
     }
 
     function beginDraggingPiece(source, piece, x, y) {
@@ -1602,7 +1578,7 @@
       captureSquareOffsets();
 
       // create the dragged piece
-      $draggedPiece.attr("src", buildPieceImgSrc(piece)).css({
+      draggedPiece.attr("src", buildPieceImgSrc(piece)).css({
         display: "",
         position: "absolute",
         left: x - squareSize / 2,
@@ -1620,7 +1596,7 @@
 
     function updateDraggedPiece(x, y) {
       // put the dragged piece over the mouse cursor
-      $draggedPiece.css({
+      draggedPiece.css({
         left: x - squareSize / 2,
         top: y - squareSize / 2
       });
@@ -1668,7 +1644,7 @@
 
     function resetShadeDrag() {
       isDraggingShade = false;
-      $draggedShade = null;
+      draggedShade = null;
     }
 
     function replaceClassInElements(domElements, classToRemove, classToAdd) {
@@ -1729,7 +1705,7 @@
         return;
       }
 
-      var srcClass = getChoiceClassOfShadeOrPieceElement($draggedShade);
+      var srcClass = getChoiceClassOfShadeOrPieceElement(draggedShade);
       var destClass = getChoiceClassOfShadeOrPieceElement(shades[0]);
 
       // do nothing if user drops on a shaded square of the same color
@@ -1738,7 +1714,7 @@
         return;
       }
 
-      // swap shade classes of the $draggedShade and the $destSquare
+      // swap shade classes of the draggedShade and the $destSquare
       swapShadeClasses(srcClass, destClass);
       // swap ghost piece ids of the corresponding moves
       swapGhostIds(
@@ -1829,11 +1805,11 @@
     // remove the widget from the page
     widget.destroy = function() {
       // remove markup
-      $container.html("");
-      $draggedPiece.remove();
+      container.innerHTML = "";
+      draggedPiece.remove();
 
       // remove event handlers
-      $container.unbind();
+      container.unbind();
     };
 
     // shorthand method to get the current FEN
@@ -1956,19 +1932,17 @@
       squareSize = calculateSquareSize();
 
       // set board width
-      $board.css("width", squareSize * 8 + "px");
+      getBoard().style.width = squareSize * 8 + "px";
 
-      // set drag piece size
-      $draggedPiece.css({
-        height: squareSize,
-        width: squareSize
-      });
+      draggedPiece.style.height = squareSize;
+      draggedPiece.style.width = squareSize;
 
       // spare pieces
       if (config.sparePieces) {
-        $container
-          .find("." + CSS.sparePieces)
-          .css("paddingLeft", squareSize + boardBorderSize + "px");
+        let sparePieces = document.querySelectorAll("." + CSS.sparePieces);
+        for(let piece of sparePieces) {
+          piece.style.paddingLeft = squareSize + boardBorderSize + "px";
+        }
       }
 
       // redraw the board
@@ -1990,7 +1964,7 @@
 
     // remove ghost elements
     widget.removeGhosts = function() {
-      $board.find("." + CSS.ghost).remove();
+      board.find("." + CSS.ghost).remove();
     };
 
     // set color of square shading
@@ -2031,7 +2005,7 @@
     };
 
     widget.removeAnnotations = function() {
-      $board.find("." + CSS["annotation"]).remove();
+      board.find("." + CSS["annotation"]).remove();
     };
 
     // -------------------------------------------------------------------------
@@ -2250,16 +2224,16 @@
       $("body").on("mousedown mousemove", "." + CSS.piece, stopDefault);
 
       // mouse drag pieces
-      $board.on("mousedown", "." + CSS.square, mousedownSquare);
-      $board.on("click", clickHandler);
-      $container.on(
+      board.on("mousedown", "." + CSS.square, mousedownSquare);
+      board.on("click", clickHandler);
+      container.on(
         "mousedown",
         "." + CSS.sparePieces + " ." + CSS.piece,
         mousedownSparePiece
       );
 
       // mouse enter / leave square
-      $board
+      board
         .on("mouseenter", "." + CSS.square, mouseenterSquare)
         .on("mouseleave", "." + CSS.square, mouseleaveSquare);
 
@@ -2271,8 +2245,8 @@
 
       // touch drag pieces
       if (isTouchDevice()) {
-        $board.on("touchstart", "." + CSS.square, touchstartSquare);
-        $container.on(
+        board.on("touchstart", "." + CSS.square, touchstartSquare);
+        container.on(
           "touchstart",
           "." + CSS.sparePieces + " ." + CSS.piece,
           touchstartSparePiece
@@ -2288,24 +2262,26 @@
       createElIds();
 
       // build board and save it in memory
-      $container.html(buildContainerHTML(config.sparePieces));
-      $board = $container.find("." + CSS.board);
+      container.innerHTML = buildContainerHTML(config.sparePieces);
 
       if (config.sparePieces) {
-        $sparePiecesTop = $container.find("." + CSS.sparePiecesTop);
-        $sparePiecesBottom = $container.find("." + CSS.sparePiecesBottom);
+        sparePiecesTop = container.querySelector("." + CSS.sparePiecesTop);
+        sparePiecesBottom = container.querySelector("." + CSS.sparePiecesBottom);
       }
 
       // create the drag piece
-      var draggedPieceId = uuid();
-      $("body").append(buildPieceHTML("wP", true, draggedPieceId));
-      $draggedPiece = $("#" + draggedPieceId);
+      let draggedPieceId = uuid();
+      let body = document.querySelector("body");
+      body.innerHTML += buildPieceHTML("wP", true, draggedPieceId);
+      draggedPiece = document.getElementById(draggedPieceId);
 
       // TODO: need to remove this dragged piece element if the board is no
       // longer in the DOM
 
       // get the border size
-      boardBorderSize = parseInt($board.css("borderLeftWidth"), 10);
+      board = container.querySelector("." + CSS.board);
+      let borderLeftWidth = getComputedStyle(board).borderLeftWidth;
+      boardBorderSize = parseInt(borderLeftWidth, 10);
 
       // set the size and draw the board
       widget.resize();
@@ -2317,7 +2293,7 @@
 
     setInitialState();
     initDOM();
-    addEvents();
+    // addEvents();
 
     // return the widget object
     return widget;
