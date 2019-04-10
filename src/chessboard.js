@@ -2221,29 +2221,34 @@
 
     function addEvents() {
       // prevent "image drag"
-      $("body").on("mousedown mousemove", "." + CSS.piece, stopDefault);
+      let pieces = document.querySelectorAll("." + CSS.piece);
+      for (let piece of pieces) {
+        piece.addEventListener('mousedown', stopDefault);
+        piece.addEventListener('mousemove', stopDefault);
+      }
+
+      let squares = document.querySelectorAll('.' + CSS.square);
+      for (let square of squares) {
+        square.addEventListener('mousedown', mousedownSquare);
+        square.addEventListener('mouseenter', mouseenterSquare);
+        square.addEventListener('mouseleave', mouseleaveSquare);
+      }
 
       // mouse drag pieces
-      board.on("mousedown", "." + CSS.square, mousedownSquare);
-      board.on("click", clickHandler);
-      container.on(
-        "mousedown",
-        "." + CSS.sparePieces + " ." + CSS.piece,
-        mousedownSparePiece
-      );
+      let board = getBoard();
+      board.addEventListener('click', clickHandler);
 
-      // mouse enter / leave square
-      board
-        .on("mouseenter", "." + CSS.square, mouseenterSquare)
-        .on("mouseleave", "." + CSS.square, mouseleaveSquare);
+      let sparePieces = document.querySelectorAll("." + CSS.sparePieces + " ." + CSS.piece);
+      for (let piece of sparePieces) {
+        piece.addEventListener('mousedown', mousedownSparePiece);
+      }
 
       // piece drag
-      var $window = $(window);
-      $window
-        .on("mousemove", throttledMousemoveWindow)
-        .on("mouseup", mouseupWindow);
+      window.addEventListener('mousemove', throttledMousemoveWindow);
+      window.addEventListener('mouseup', mouseupWindow);
 
       // touch drag pieces
+      /*
       if (isTouchDevice()) {
         board.on("touchstart", "." + CSS.square, touchstartSquare);
         container.on(
@@ -2255,6 +2260,7 @@
           .on("touchmove", throttledTouchmoveWindow)
           .on("touchend", touchendWindow);
       }
+      */
     }
 
     function initDOM() {
@@ -2293,7 +2299,7 @@
 
     setInitialState();
     initDOM();
-    // addEvents();
+    addEvents();
 
     // return the widget object
     return widget;
